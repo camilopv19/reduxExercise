@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { NgRedux, NgReduxModule } from '@angular-redux/store';
+import { NgModule, isDevMode } from '@angular/core';
+import { NgRedux, NgReduxModule, DevToolsExtension } from '@angular-redux/store';
 import { AppComponent } from './app.component';
 import { TodoDashboardComponent } from './todo-dashboard/todo-dashboard.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
@@ -20,7 +20,9 @@ import { IAppSate, rootReducer, INITIAL_STATE } from './store';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(ngRedux: NgRedux<IAppSate>) {
-    ngRedux.configureStore(rootReducer, INITIAL_STATE);
+  constructor(ngRedux: NgRedux<IAppSate>,
+    devTools: DevToolsExtension) {
+      var enhancers = isDevMode() ? [devTools.enhancer()] : [];
+    ngRedux.configureStore(rootReducer, INITIAL_STATE, [], enhancers);  //With DevtoolsExtension, no need to add middleware
   }
 }
